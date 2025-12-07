@@ -1,2 +1,4 @@
 my_idea.md
 plan.md
+*.env
+*.env.local
