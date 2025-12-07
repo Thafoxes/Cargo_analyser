@@ -267,11 +267,3 @@ MIT License - feel free to use and modify!
 
 ---
 
-<div align="center">
-
-**Built with ❤️ for the Cursor Hackathon**
-
-[View Demo](http://localhost:3000) · [Report Bug](https://github.com/yourusername/cargo_space_analyser/issues) · [Request Feature](https://github.com/yourusername/cargo_space_analyser/issues)
-
-</div>
-
