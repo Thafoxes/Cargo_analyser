@@ -82,11 +82,11 @@ export default function AIPlacementPanel({
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="cyber-card w-full max-w-6xl max-h-[90vh] overflow-auto"
+        className="cyber-card w-full max-w-6xl max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="p-6 border-b border-cyber-cyan/20 flex items-center justify-between sticky top-0 bg-cyber-bg/95 backdrop-blur z-10">
+        {/* Header - Fixed at top */}
+        <div className="p-6 border-b border-cyber-cyan/20 flex items-center justify-between flex-shrink-0 bg-cyber-bg">
           <div className="flex items-center gap-4">
             <div className="relative">
               <Brain className="text-cyber-cyan w-8 h-8" />
@@ -110,8 +110,8 @@ export default function AIPlacementPanel({
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
+        {/* Content - Scrollable */}
+        <div className="p-6 overflow-y-auto flex-1">
           {!analysisResult && !isAnalyzing && (
             <div className="text-center py-12">
               {/* Flight Summary */}
