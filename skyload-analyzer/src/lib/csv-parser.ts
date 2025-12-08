@@ -44,7 +44,7 @@ export function parseCSV(csvContent: string): Promise<FlightData[]> {
           reject(error);
         }
       },
-      error: (error) => {
+      error: (error: Error) => {
         reject(error);
       },
     });

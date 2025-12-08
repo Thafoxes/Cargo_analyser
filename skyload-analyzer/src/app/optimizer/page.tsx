@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
@@ -37,7 +37,20 @@ interface PlacementResult {
   warnings: string[];
 }
 
+// Wrap page in Suspense for useSearchParams
 export default function OptimizerPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-cyber-bg flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-cyber-cyan animate-spin" />
+      </div>
+    }>
+      <OptimizerContent />
+    </Suspense>
+  );
+}
+
+function OptimizerContent() {
   const searchParams = useSearchParams();
   const [flights, setFlights] = useState<FlightData[]>([]);
   const [selectedFlight, setSelectedFlight] = useState<FlightData | null>(null);

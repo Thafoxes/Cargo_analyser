@@ -105,19 +105,21 @@ Return JSON with placements array using the exact container IDs provided.`;
       system: systemPrompt,
     });
 
-    const textContent = response.content.find((block) => block.type === "text");
-    if (!textContent || textContent.type !== "text") {
+    const textBlock = response.content.find((block) => block.type === "text");
+    if (!textBlock) {
       return NextResponse.json(generateFallbackPlacement(body));
     }
 
+    // Type assertion: find() filtered for type === "text", so if it exists, it's a text block
+    const textContent = textBlock as { type: "text"; text: string };
+
     let aiResponse;
     try {
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        aiResponse = JSON.parse(jsonMatch[0]);
-      } else {
+      const jsonString = (textContent.text.match(/\{[\s\S]*\}/) ?? [])[0] ?? "";
+      if (!jsonString) {
         throw new Error("No JSON found");
       }
+      aiResponse = JSON.parse(jsonString);
     } catch {
       return NextResponse.json(generateFallbackPlacement(body));
     }
