@@ -110,8 +110,8 @@ export default function AIPlacementPanel({
           </button>
         </div>
 
-        {/* Content - Scrollable */}
-        <div className="p-6 overflow-y-auto flex-1">
+        {/* Content - Scrollable with visible scrollbar */}
+        <div className="p-6 overflow-y-auto flex-1 cyber-scrollbar">
           {!analysisResult && !isAnalyzing && (
             <div className="text-center py-12">
               {/* Flight Summary */}
