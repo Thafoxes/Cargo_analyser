@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Sparkles, Database } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FileUploadProps {
@@ -14,6 +14,7 @@ export default function FileUpload({ onFileLoaded, isLoading = false }: FileUplo
   const [isDragging, setIsDragging] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle");
   const [fileName, setFileName] = useState<string>("");
+  const [isLoadingSample, setIsLoadingSample] = useState(false);
 
   const handleFile = useCallback(
     (file: File) => {
@@ -72,6 +73,25 @@ export default function FileUpload({ onFileLoaded, isLoading = false }: FileUplo
     },
     [handleFile]
   );
+
+  const handleLoadSampleData = async () => {
+    setIsLoadingSample(true);
+    try {
+      const response = await fetch("/api/sample-data");
+      if (!response.ok) {
+        throw new Error("Failed to load sample data");
+      }
+      const data = await response.json();
+      setFileName("sample_flight_data.csv (Demo)");
+      onFileLoaded(data.csv);
+      setUploadStatus("success");
+    } catch (error) {
+      console.error("Failed to load sample data:", error);
+      setUploadStatus("error");
+    } finally {
+      setIsLoadingSample(false);
+    }
+  };
 
   return (
     <motion.div
@@ -141,6 +161,33 @@ export default function FileUpload({ onFileLoaded, isLoading = false }: FileUplo
             <p className="text-xs text-gray-500 mt-4 font-mono">
               Supported format: .csv
             </p>
+
+            {/* Sample Data Button */}
+            <div className="mt-6 pt-4 border-t border-cyber-cyan/20 w-full">
+              <button
+                onClick={handleLoadSampleData}
+                disabled={isLoadingSample}
+                className="group flex items-center justify-center gap-2 w-full py-3 px-4 bg-cyber-magenta/10 hover:bg-cyber-magenta/20 border border-cyber-magenta/30 hover:border-cyber-magenta/60 rounded transition-all duration-300 disabled:opacity-50"
+              >
+                {isLoadingSample ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin text-cyber-magenta" />
+                    <span className="text-sm text-cyber-magenta font-mono">LOADING...</span>
+                  </>
+                ) : (
+                  <>
+                    <Database size={16} className="text-cyber-magenta group-hover:animate-pulse" />
+                    <span className="text-sm text-gray-400 group-hover:text-cyber-magenta transition-colors">
+                      No file? <span className="text-cyber-magenta font-semibold">Try sample data</span>
+                    </span>
+                    <Sparkles size={12} className="text-cyber-cyan" />
+                  </>
+                )}
+              </button>
+              <p className="text-xs text-gray-600 mt-2 font-mono text-center">
+                40 sample flights • Multiple aircraft types
+              </p>
+            </div>
           </>
         )}
       </div>
